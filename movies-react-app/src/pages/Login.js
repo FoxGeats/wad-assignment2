@@ -12,10 +12,11 @@ import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { auth, logInWithEmailAndPassword, signInWithGoogle } from "../firebase";
-import React, { useEffect, useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
+
+import React, { useEffect,  useContext,useState } from "react";
+
 import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/authContext";
 
 function Copyright(props) {
   return (
@@ -30,22 +31,24 @@ function Copyright(props) {
   );
 }
 
+
 const theme = createTheme();
 
 export default function SignInSide() {
 
     const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [user, loading] = useAuthState(auth);
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (loading) {
-      <Spinner />
-      return;
-    }
-    if (user) navigate("/");
-  }, [user, loading,navigate]);
 
+  const navigate = useNavigate();
+
+const context = useContext(AuthContext);
+  const login = () => {
+    context.authenticate(email, password);
+  };
+
+  if (context.isAuthenticated === true) {
+    return navigate("/")
+  }
 
 
 
@@ -118,25 +121,13 @@ export default function SignInSide() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-                onClick={() => logInWithEmailAndPassword(email, password)}
+                onClick={login}
               >
                 Sign In
               </Button>
-              <Button
-                
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                onClick={signInWithGoogle}
-              >
-               Login with Google
-              </Button>
+             
               <Grid container>
-                <Grid item xs>
-                  <Link to="/reset" variant="body2">
-                    Forgot password?
-                  </Link>
-                </Grid>
+                
                 <Grid item>
                   <Link to="/register" variant="body2">
                     {"Don't have an account? Sign Up"}

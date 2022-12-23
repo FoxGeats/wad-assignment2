@@ -11,9 +11,11 @@ import { useNavigate } from "react-router-dom";
 import { styled } from '@mui/material/styles';
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { logout } from "../../firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../firebase";
+import {useContext } from "react";
+
+import { AuthContext } from "../../contexts/authContext";
+
+
 const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
 const SiteHeader = ({ history }) => {
@@ -24,7 +26,8 @@ const SiteHeader = ({ history }) => {
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
 
   const navigate = useNavigate();
-  const [user] = useAuthState(auth);
+  const context = useContext(AuthContext);
+  //const [user] = useAuthState(auth);
   const menuOptions = [
     { label: "Home", path: "/" },
     { label: "Favorites", path: "/movies/favorites" },
@@ -39,8 +42,12 @@ const SiteHeader = ({ history }) => {
   ]
   const handleMenuSelect = (pageURL) => {
     if (pageURL === "/pages/logout") {
-      logout()
+      //logout()
+      context.signout().then(() => {
+        navigate("/", {replace: true});
+      })
     }
+    
     navigate(pageURL, { replace: true });
   };
 
@@ -61,13 +68,13 @@ const SiteHeader = ({ history }) => {
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             All you ever wanted to know about Movies!
           </Typography>
-          {user == null ? (
+          {!(context.isAuthenticated) ? (
             <Typography variant="p" sx={{ flexGrow: 1 }}>
               please log in
             </Typography>
           ) :
             (<Typography variant="p" sx={{ flexGrow: 1 }} >
-              Hello! {user.email}
+              Hello! {context.userEmail}
             </Typography>)
           }
           {isMobile ? (
@@ -105,20 +112,20 @@ const SiteHeader = ({ history }) => {
                   </MenuItem>
                 ))}
 
-                {user == null ? (
+                {context.isAuthenticated ? (
                   <MenuItem
-                    key={menuUserOptions[1].label}
+                    key={menuUserOptions[0].label}
                     color="inherit"
-                    onClick={() => handleMenuSelect(menuUserOptions[1].path)}
+                    onClick={() => handleMenuSelect(menuUserOptions[0].path)}
                   >
-                    {menuUserOptions[1].label}
+                    {menuUserOptions[0].label}
                   </MenuItem>
                 ) : (<MenuItem
-                  key={menuUserOptions[0].label}
+                  key={menuUserOptions[1].label}
                   color="inherit"
-                  onClick={() => handleMenuSelect(menuUserOptions[0].path)}
+                  onClick={() => handleMenuSelect(menuUserOptions[1].path)}
                 >
-                  {menuUserOptions[0].label}
+                  {menuUserOptions[1].label}
                 </MenuItem>
                 )
 
@@ -136,20 +143,20 @@ const SiteHeader = ({ history }) => {
                   {opt.label}
                 </Button>
               ))}
-              {user == null ? (
+              {context.isAuthenticated ? (
                 <Button
-                  key={menuUserOptions[1].label}
+                  key={menuUserOptions[0].label}
                   color="inherit"
-                  onClick={() => handleMenuSelect(menuUserOptions[1].path)}
+                  onClick={() => handleMenuSelect(menuUserOptions[0].path)}
                 >
-                  {menuUserOptions[1].label}
+                  {menuUserOptions[0].label}
                 </Button>
               ) : (<Button
-                key={menuUserOptions[0].label}
+                key={menuUserOptions[1].label}
                 color="inherit"
-                onClick={() => handleMenuSelect(menuUserOptions[0].path)}
+                onClick={() => handleMenuSelect(menuUserOptions[1].path)}
               >
-                {menuUserOptions[0].label}
+                {menuUserOptions[1].label}
               </Button>
               )
 
