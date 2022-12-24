@@ -4,6 +4,8 @@ import asyncHandler from 'express-async-handler';
 import jwt from 'jsonwebtoken';
 import movieModel from '../movies/movieModel';
 import { getMovie } from '../tmdb-api';
+
+
 const router = express.Router(); // eslint-disable-line
 
 // Get all users
@@ -57,12 +59,12 @@ router.post('/',asyncHandler( async (req, res, next) => {
 
 //Add a favourite. No Error Handling Yet. Can add duplicates too!
 router.post('/:userName/favourites', asyncHandler(async (req, res) => {
-    const newFavourite = req.body.id;
+    const newFavourite = req.body.movie;
     const userName = req.params.userName;
     const movie = await movieModel.findByMovieDBId(newFavourite);
     const user = await User.findByUserName(userName);
-    if(!user.favourites.includes(movie._id)){
-    await user.favourites.push(movie._id);
+    if(!user.favourites.includes(movie.id)){
+    await user.favourites.push(movie.id);
     await user.save(); 
     res.status(201).json(user); 
 }else
@@ -74,9 +76,20 @@ router.post('/:userName/favourites', asyncHandler(async (req, res) => {
   }));
   router.get('/:userName/favourites', asyncHandler( async (req, res) => {
     const userName = req.params.userName;
-    const user = await User.findByUserName(userName).populate('favourites');
+    const user = await User.findByUserName(userName);
     res.status(200).json(user.favourites);
   }));
 
+
+//Delete a favourite
+router.post('/:username/movie/:id/favourites', asyncHandler(async (req, res) => {
+  const newFavourite = req.params.id;
+  const userName = req.params.username;
+  const user = await User.findByUserName(userName);
+  const index = user.favourites.indexOf(newFavourite)
+  await user.favourites.splice(index, 1);
+  await user.save(); 
+  return res.status(201).json(user); 
+}));
 
 export default router;

@@ -55,7 +55,6 @@ const SiteHeader = ({ history }) => {
     setAnchorEl(event.currentTarget);
   };
 
- 
 
   return (
     <>
