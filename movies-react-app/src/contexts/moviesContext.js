@@ -12,12 +12,16 @@ const MoviesContextProvider = (props) => {
   const email = userContext.userEmail
   const [favourites, setFavourites] = useState([]);
 
-
+  useEffect(() => {
   if(userContext.isAuthenticated){
       getFavourites(email).then((favourites) => {
       setFavourites(favourites);
     });
   }
+  else {
+    setFavourites([])
+  }
+}, [favorites, userContext.isAuthenticated, email])
 
 
   const addToFavorites = (username, movie) => {

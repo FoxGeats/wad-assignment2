@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Spinner from '../components/spinner';
+
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -34,7 +34,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function SignInSide() {
+ function SignInSide() {
 
     const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -45,11 +45,11 @@ const context = useContext(AuthContext);
   const login = () => {
     context.authenticate(email, password);
   };
-
+  useEffect(() => {
   if (context.isAuthenticated === true) {
     return navigate("/")
   }
-
+  })
 
 
   return (
@@ -142,3 +142,4 @@ const context = useContext(AuthContext);
     </ThemeProvider>
   );
 }
+export default SignInSide;

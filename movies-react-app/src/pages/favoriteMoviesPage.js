@@ -7,14 +7,17 @@ import Spinner from '../components/spinner'
 import RemoveFromFavorites from "../components/cardIcons/removeFromFavorites";
 import WriteReview from "../components/cardIcons/writeReview";
 import { AuthContext } from "../contexts/authContext";
-import { getFavourites } from "../api/tmdb-api";
+
 
 const FavoriteMoviesPage = () => {
  
   const userContext = useContext(AuthContext)
-  const email = userContext.userEmail
+
   const {favourites} = useContext(MoviesContext)
   
+  if(!userContext.isAuthenticated) {
+    MoviesContext.favourites = []
+  }
 
   // Create an array of queries and run in parallel.
   const favouriteMovieQueries = useQueries(

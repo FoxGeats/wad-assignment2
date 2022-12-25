@@ -15,7 +15,7 @@ function RegisterPage() {
 
 
   const register = () => {
-    let passwordRegEx = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+    let passwordRegEx = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$/;
     const validPassword = passwordRegEx.test(password);
 
     if (validPassword && password === passwordAgain) {
