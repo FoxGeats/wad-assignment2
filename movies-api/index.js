@@ -5,7 +5,7 @@ import moviesRouter from './api/movies';
 import './db';
 import './seedData'
 import usersRouter from './api/users';
-
+import actorsRouter from './api/actors';
 import passport from './authenticate';
 
 
@@ -29,7 +29,7 @@ app.use(passport.initialize());
 
 app.use('/api/users', usersRouter);
 app.use('/api/movies', moviesRouter)
-
+app.use('/api/actors', actorsRouter);
 
 app.use(errHandler);
 app.listen(port, () => {
