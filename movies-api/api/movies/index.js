@@ -3,20 +3,26 @@ import express from 'express';
 import uniqid from 'uniqid'
 
 import asyncHandler from 'express-async-handler';
-import { getUpcomingMovies } from '../tmdb-api';
-import { getMovie } from '../tmdb-api';
+import {getMovies,getMovie, getUpcomingMovies, getTopRatedMovies, getMovieImages } from '../tmdb/tmdb-api';
 
 
 const router = express.Router(); 
 
-router.get('/', asyncHandler(async (req, res) => {
-    const movies = await movieModel.find();
-    res.status(200).json(movies);
-}));
+router.get('/home/:page', asyncHandler( async(req, res) => {
+    const page = parseInt(req.params.page);
+    const Movies = await getMovies(page);
+    res.status(200).json(Movies);
+  }));
+
+
+// router.get('/', asyncHandler(async (req, res) => {
+//     const movies = await movieModel.find();
+//     res.status(200).json(movies);
+// }));
 // Get movie details
 router.get('/:id', asyncHandler(async (req, res) => {
     const id = parseInt(req.params.id);
-    const movie = await movieModel.findByMovieDBId(id);
+    const movie = await getMovie(id);
     if (movie) {
         res.status(200).json(movie);
     } else {
@@ -56,9 +62,32 @@ router.post('/:id/reviews', (req, res) => {
     }
 });
 
-router.get('/tmdb/upcoming', asyncHandler( async(req, res) => {
-    const upcomingMovies = await getUpcomingMovies();
+router.get('/:id/favourites', async (req, res) => {
+    const user = await User.findById(req.params.id);
+    if (user) {
+        res.status(200).json(user.favourites);
+    } else {
+        res.status(404).json({ code: 404, msg: 'Unable to find favourites' });
+    }
+});
+
+
+router.get('/tmdb/upcoming/:page', asyncHandler( async(req, res) => {
+    const page = parseInt(req.params.page);
+    const upcomingMovies = await getUpcomingMovies(page);
     res.status(200).json(upcomingMovies);
   }));
+
+
+  router.get('/tmdb/topRated/:page', asyncHandler( async(req, res) => {
+    const page = parseInt(req.params.page);
+    const topRatedMovies = await getTopRatedMovies(page);
+    res.status(200).json(topRatedMovies);
+}));
+
+router.get('/tmdb/movie/:id/images', asyncHandler( async(req, res) => {
+    const images = await getMovieImages(req.params.id);
+    res.status(200).json(images);
+}));
 
 export default router;

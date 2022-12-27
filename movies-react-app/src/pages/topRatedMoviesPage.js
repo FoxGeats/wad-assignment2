@@ -31,7 +31,7 @@ const TopRatedMoviesPage = (props) => {
         return <AddToFavoritesIcon movie={movie} />
       }}
     />
-    <MyPagination page={Number(page)} setPage={setPage} totalPages={Number(totalPages)}/>
+    <MyPagination page={Number(page)} setPage={setPage} totalPages={Math.floor(Number(totalPages*0.9))}/>
     </>
   );
 };
