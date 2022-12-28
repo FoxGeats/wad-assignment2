@@ -10,6 +10,8 @@ import { MoviesContext } from "../../contexts/moviesContext";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../contexts/authContext";
+import { addReview } from "../../api/tmdb-api";
 
 const ratings = [
   {
@@ -62,10 +64,12 @@ const styles = {
 };
 
 const ReviewForm = ({ movie }) => {
-  const context = useContext(MoviesContext);
+ 
   const [rating, setRating] = useState(3);
   const [open, setOpen] = useState(false); 
   const navigate = useNavigate();
+ const userContext = useContext(AuthContext)
+  const userName = userContext. userEmail;
 
   const defaultValues = {
     author: "",
@@ -88,8 +92,8 @@ const ReviewForm = ({ movie }) => {
   const onSubmit = (review) => {
     review.movieId = movie.id;
     review.rating = rating;
-    
-    context.addReview(movie, review);
+    review.author = userName;
+    addReview(userName, movie, review);
     setOpen(true); // NEW
   };
 const handleSnackClose = (event) => {
@@ -121,32 +125,32 @@ const handleSnackClose = (event) => {
 
       <form sx={styles.form} onSubmit={handleSubmit(onSubmit)} noValidate>
         <Controller
-          name="author"
-          control={control}
-          rules={{ required: "Name is required" }}
-          defaultValue=""
-          render={({ field: { onChange, value } }) => (
-            <TextField
-              sx={{ width: "40ch" }}
-              variant="outlined"
-              margin="normal"
-              required
-              onChange={onChange}
-              value={value}
-              id="author"
-              label="Author's name"
-              name="author"
-              autoFocus
-            />
-          )}
-        />
-        {errors.author && (
-          <Typography variant="h6" component="p">
-            {errors.author.message}
-          </Typography>
-        )}
-        <Controller
-          name="review"
+        //   name="author"
+        //   control={control}
+        //   rules={{ required: "Name is required" }}
+        //   defaultValue=""
+        //   render={({ field: { onChange, value } }) => (
+        //     <TextField
+        //       sx={{ width: "40ch" }}
+        //       variant="outlined"
+        //       margin="normal"
+        //       required
+        //       onChange={onChange}
+        //       value={value}
+        //       id="author"
+        //       label="Author's name"
+        //       name="author"
+        //       autoFocus
+        //     />
+        //   )}
+        // />
+        // {errors.author && (
+        //   <Typography variant="h6" component="p">
+        //     {errors.author.message}
+        //   </Typography>
+        // )}
+        // <Controller
+          name="content"
           control={control}
           rules={{
             required: "Review cannot be empty.",
@@ -159,7 +163,7 @@ const handleSnackClose = (event) => {
               margin="normal"
               required
               fullWidth
-              name="review"
+              name="content"
               value={value}
               onChange={onChange}
               label="Review text"

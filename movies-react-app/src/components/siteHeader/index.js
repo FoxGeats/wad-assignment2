@@ -43,9 +43,7 @@ const SiteHeader = ({ history }) => {
   const handleMenuSelect = (pageURL) => {
     if (pageURL === "/pages/logout") {
       //logout()
-      context.signout().then(() => {
-        navigate("/", {replace: true});
-      })
+      context.signout()
     }
     
     navigate(pageURL, { replace: true });

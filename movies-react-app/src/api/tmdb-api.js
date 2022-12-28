@@ -58,15 +58,6 @@ export const deleteFavourite = (username, movie) => {
     }).catch((error) => {
        console.log(error);
    
-  //   `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US&include_adult=false&include_video=false&page=${page}`
-  // ).then((response) => {
-  //   if (!response.ok) {
-  //     throw new Error(response.json().message);
-  //   }
-  //   return response.json();
-  // })
-  // .catch((error) => {
-  //    throw error
   });
  };
   
@@ -106,17 +97,24 @@ export const getMovie = (args) => {
       });
     };
     
-  export const getMovieReviews = (id) => {
+  export const getMovieReviews = async (id) => {
     return fetch(
-      `https://api.themoviedb.org/3/movie/${id}/reviews?api_key=${process.env.REACT_APP_TMDB_KEY}`
-    )
-      .then((res) => res.json())
-      .then((json) => {
-        // console.log(json.results);
-        return json.results;
+      `/api/reviews/movie/${id}/reviews`
+      ).then(res => {
+        return res.json();
+      }).catch((error) => {
+        console.log(error);
       });
-  };
-
+    };
+    export const addReview = async (username, movie, review) => {
+      return fetch(`/api/reviews/movie/${movie.id}/reviews/${username}`, {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'post',
+        body: JSON.stringify({ author: review.author, movieId: movie.id, content: review.content, rating: review.rating })
+      }).then(res => res.json())
+    };
 
 
   export const getMovieUpcoming = (args) => {

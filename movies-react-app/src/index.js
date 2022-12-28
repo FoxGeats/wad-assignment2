@@ -40,10 +40,12 @@ const App = () => {
     <SiteHeader />
     <MoviesContextProvider>
     <Routes>
-      <Route path="/reviews/form" element={ <AddMovieReviewPage /> } />
+      
       <Route path="/reviews/:id" element={ <MovieReviewPage /> } />
       <Route element={<ProtectedRoutes />}>
           <Route path="/movies/favorites" element={<FavoriteMoviesPage />} />
+          <Route path="/reviews/form" element={ <AddMovieReviewPage /> } />
+      
       </Route>
       <Route path="/movies/:id" element={<MoviePage />} />
       <Route path="/" element={<HomePage />} />
