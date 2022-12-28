@@ -1,4 +1,4 @@
-# react-movie-assignment-1
+# react-movie-assignment-2
 Name: Shu Chen
 
 ## Overview.
@@ -18,42 +18,51 @@ Users can log in with their email address and password authenticated by firebase
 + TV Detail Page
 
 ## Setup requirements.
-+ First navigate to the movies folder
 
-`cd movies`
 
-+ Create a .env file in src and include the following.
++ Create a .env file in movies/api/ and include the following.
 
-`REACT_APP_TMDB_KEY=<YOUR_TMDB_API_KEY>`
-
-`FAST_REFRESH=false`
+`NODE_ENV=development`
+`PORT=8080`
+`HOST=localhost`
+`MONGO_DB=YourMongoURL`
+`SEED_DB=True`
+`SECRET=YourJWTSecret`
+`REACT_APP_TMDB_KEY=YourTMDBApiKey`
 
 ## API endpoints.
 
-+ Popular actors - /movies/people
-+ Actor Details - /persons/:id 
-+ Discover TV  - /TV/popular 
-+ TV Detail Page - /TV/:id 
-+ Register Page - /register 
-+ Reset password - /reset 
-+ Login Page - /login 
-+ Top Rated Movies - /movies/topRated
-## Routing.
-+ /movies/topRated - displays a list of top rated movies. (public)
-+ /movies/people - displays a list of popular actors. (public)
-+ /persons/:id - Detailed view of an actor including a list of movies they have starred in. (public)
-+ /register - A simple register page allowing a user to create an account or sign in with Google. (public)
-+ /reset - A simple reset password page that a user can reset their password for their account by sending emails (does not work with google account sign in). (public)
-+ /login - The login page that a user can log in with email or with Google. (public)
-+ /TV/popular - displays a list of TVs. (public)  
-+  /TV/:id - displays the details of TV. (public)  
 
-## Independent learning.
-I learnt the technology of aunthentication by firebase to implement login, regist and reset. Once logged in, information is saved to firestore and the users email is displayed in the navigation bar next time they log in.
-+ firebase.js
+### Actors
++ /api/actors/popular | GET | Gets popular actors from movies-api
++ /api/actors/:id | GET | Gets detailed information of an actor from movies-api
++ /api/actors/:id/images | GET | Gets actor images from movies-api
+### Genres
++ /api/genres/ | GET | Gets all genres from tmdb
+### Movies
++ /api/movies/home/:page | GET | Gets discover movie from tmdb based on page number
++ /api/movies/:id | GET | Gets a single movie from tmdb
++ /api/movies/tmdb/upcoming/:page | GET | Get upcoming movies from tmdb based on page number
++ /api/movies/tmdb/topRated/:page | GET | Get top rated movies from tmdb based on page number
++ /api/movies/tmdb/movie/:id/images | GET | Get movie images from tmdb
 
-## References.
+### Users
++ /api/users/ | GET | Gets all users information from MongoDB
++ /api/users/ | POST | Registers/authenticates a user
++ /api/users/:id | Put | Updates information about a user
++ /api/users/:userName/favourites | GET | Gets users favourites
++ /api/users/:userName/favourites | POST | Add a favourite movieId to user's favourites
++ /api/users/:username/movie/:id/favourites | POST | Deletes a movieId from a user's favourites
+### Reviews
++ /api/reviews/movie/:id/reviews | GET | Gets a movie reviews
++ /api/reviews/movie/:id/reviews/:username | POST | posts or updates a review
 
-+ [Firebase](https://firebase.google.com/docs/web/setup?authuser=0&hl=zh)
-+ [Pagination](https://mui.com/material-ui/react-pagination/#basic-pagination)
 
+## Authentication and protected routes.
++ /movies/favorites
++ /reviews/form
+
+## Integrating with React App
++ All the data in react app comes from the movies-api.
++ All favourite movie IDs are stored in MongoDB through this API. When they log out, the web page will not show the favoriates.
++ All reviews are stored in MongoDB. Users can see their own reviews and reviews from TMDB.

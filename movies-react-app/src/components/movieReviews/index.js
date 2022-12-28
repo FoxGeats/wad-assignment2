@@ -19,7 +19,7 @@ export default function MovieReviews({ movie }) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  console.log(reviews)
   return (
     <TableContainer component={Paper}>
       <Table sx={{minWidth: 550}} aria-label="reviews table">

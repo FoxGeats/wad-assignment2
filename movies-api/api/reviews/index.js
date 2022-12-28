@@ -1,15 +1,19 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
 import Review from './reviewModel'
-
+import {getMovieReviews} from '../tmdb/tmdb-api'
 const router = express.Router(); 
 
 // Get movie reviews
 router.get('/movie/:id/reviews', asyncHandler(async (req, res) => {
     const id = parseInt(req.params.id);
     const movieReviews = await Review.find({movieId: id});
+    const movieReviewsTmdb= await getMovieReviews(id);
+   
+ const resReviews=movieReviews.concat(movieReviewsTmdb)
+ 
     if(id){
-        res.status(200).json(movieReviews); 
+        res.status(200).json(resReviews); 
     } else {
         res.status(404).json({
             message: 'The resource you requested could not be found.',
@@ -18,6 +22,10 @@ router.get('/movie/:id/reviews', asyncHandler(async (req, res) => {
     }
 
 }));
+
+
+
+
 
 //Post a movie review
 router.post('/movie/:id/reviews/:username', asyncHandler(async (req, res) => {
