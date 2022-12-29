@@ -21,6 +21,8 @@ function RegisterPage() {
     if (validPassword && password === passwordAgain) {
       context.register(email, password);
       setRegistered(true);
+    }if(!validPassword){
+      alert('The password should have at least 5 chars long and one number')
     }
   }
   if (registered) {
